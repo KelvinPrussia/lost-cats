@@ -1,0 +1,25 @@
+<h1>Edit Advert</h1>
+
+<form action="/lost_cats/<%= index %>" method="POST">
+<input type="hidden" name="_method" value="PATCH">
+
+  <div>
+    <label for="name">Name:</label>
+    <br>
+    <input type="text" id="name" name="name" value="<%= h advert.name %>">
+  </div>
+
+  <div>
+    <label for="description">Description:</label>
+    <br>
+    <input type="text" id="description" name="description" value="<%= hattr advert.description %>">
+  </div>
+
+  <div>
+    <label for="phone_number">Phone number:</label>
+    <br>
+    <input type="text" id="phone_number" name="phone_number" value="<%= hattr advert.phone_number %>">
+  </div>
+
+  <input type="submit" value="Update">
+</form>

@@ -1,0 +1,24 @@
+<h1>Lost Cats</h1>
+
+<% if adverts.empty? %>
+There are no adverts.
+<% else %>
+  <% adverts.each_with_index do|advert, index|%>
+    <article>
+      <h2><%= h advert.name %></h2>
+      <p><%= h advert.description %></p>
+      <p>Contact number: <%= advert.phone_number %></p>
+
+      <a href="/lost_cats/<%= index %>/edit" id= "edit_<%= index %>">
+        <button>Edit Advert</button>
+      </a>
+
+      <form action="/lost_cats/<%= index %>" method="POST">
+        <input type="hidden" name="_method" value="DELETE">
+        <button id= "delete_<%= index %>">Delete Advert</button>
+      </form>
+    </article>
+  <% end%>
+<% end %>
+
+<a href="/lost_cats/new">Add Advert</a>

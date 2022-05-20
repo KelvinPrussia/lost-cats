@@ -5,6 +5,8 @@ require 'sinatra/reloader'
 
 # You will want to require your data model class here
 require "animal_list"
+require "lost_cats"
+require "lost_cat_advert"
 
 class WebApplicationServer < Sinatra::Base
   # This line allows us to send HTTP Verbs like `DELETE` using forms
@@ -21,13 +23,59 @@ class WebApplicationServer < Sinatra::Base
     # In future you will use a database instead.
     $global ||= {}
   end
+  
+  helpers do
+    def h(text)
+      Rack::Utils.escape_html(text)
+    end
+  
+    def hattr(text)
+      Rack::Utils.escape_path(text)
+    end
+  end
 
   # Start your server using `rackup`.
   # It will sit there waiting for requests. It isn't broken!
 
   # YOUR CODE GOES BELOW THIS LINE
 
-  # ...
+  get "/lost_cats" do
+    erb :lost_cats_index, locals: {
+      adverts: lost_cats.adverts
+    }
+  end
+
+  get "/lost_cats/new" do
+    erb :lost_cats_new
+  end
+
+  post "/lost_cats" do
+    advert = LostCatAdvert.new(params[:name], params[:description], params[:phone_number])
+    lost_cats.add(advert)
+    redirect "/lost_cats"
+  end
+
+  delete "/lost_cats/:index" do
+    lost_cats.remove(params[:index].to_i)
+    redirect "/lost_cats"
+  end
+
+  get "/lost_cats/:index/edit" do
+    erb :lost_cats_edit, locals: {
+      index: params[:index].to_i,
+      advert: lost_cats.get(params[:index].to_i)
+    }
+  end
+
+  patch "/lost_cats/:index" do
+    advert = LostCatAdvert.new(params[:name], params[:description], params[:phone_number])
+    lost_cats.update(params[:index].to_i, advert)
+    redirect "/lost_cats"
+  end
+
+  def lost_cats
+    $global[:lost_cats] ||= LostCats.new
+  end
 
   # This is an example of setting up a new instance using the global data store.
   # def your_data_model
